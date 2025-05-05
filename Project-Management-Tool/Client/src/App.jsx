@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from "react";
+import Register from "./components/Register";
+import Login from "./components/Login";
+import ProjectList from "./components/ProjectList";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [loggedIn, setLoggedIn] = useState(
+    localStorage.getItem("token") ? true : false
+  );
+  const [projects, setProjects] = useState([]);
+  const [showLogin, setShowLogin] = useState(false);
+
+  const handleLogin = () => {
+    setLoggedIn(true);
+    setShowLogin(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div style={{ padding: "20px" }}>
+      {!loggedIn ? (
+        <>
+          {showLogin ? (
+            <div>
+              <Login />
+              <p>
+                if you do not have an account?{" "}
+                <button onClick={() => setShowLogin(false)}>Register</button>
+              </p>
+            </div>
+            
+          ) : (
+            <div>
+              <Register onRegisterSuccess={() => setShowLogin(true)} />
+              <p>
+                Already have an account?{" "}
+                <button onClick={() => setShowLogin(true)}>Login</button>
+              </p>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          <ProjectList projects={projects} />
+          <button onClick={handleLogout}>Log Out</button>
+        </>
+      )}
+    </div>
+  );
+};
 
-export default App
+export default App;
