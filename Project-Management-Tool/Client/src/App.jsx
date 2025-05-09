@@ -1,60 +1,46 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import ProjectList from "./components/ProjectList";
 import CreateProject from "./components/CreateProject";
-import { ToastContainer } from "react-toastify";
-import { removeToken } from "./Services/AdminService";
+import NavigationBar from "./Navigation/NavigationBar";
+import Feedback from "./Navigation/Feedback";
+import Contact from "./Navigation/Contact";
+import Home from "./Navigation/Home";
+import AboutUs from "./Navigation/AboutUs";
+import { AuthContext } from "./context/AuthContext";
+import Footer from "./components/Footer";
 
 const App = () => {
-  const [loggedIn, setLoggedIn] = useState(
-    localStorage.getItem("token") ? true : false
-  );
-
-  const [showLogin, setShowLogin] = useState(false);
+  const { loggedIn, login, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleLogin = () => {
-    setLoggedIn(true);
-    setShowLogin(false);
-  };
-
-  const handleLogout = () => {
-    removeToken("token");
-    setLoggedIn(false);
+    login();
+    navigate("/projects");
   };
 
   return (
     <div style={{ padding: "20px" }}>
-      <div style={{ padding: "20px" }}>
-        {!loggedIn ? (
+      <NavigationBar/>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/contact-us" element={<Contact />} />
+        <Route path="/sign-in" element={<Login onLoginSuccess={handleLogin} />} />
+        <Route path="/sign-up" element={<Register onRegisterSuccess={() => navigate("/sign-in")} />} />
+        {loggedIn && (
           <>
-            {showLogin ? (
-              <div>
-                <Login />
-                <p>
-                  if you do not have an account?{" "}
-                  <button onClick={() => setShowLogin(false)}>Register</button>
-                </p>
-              </div>
-            ) : (
-              <div>
-                <Register onRegisterSuccess={() => setShowLogin(true)} />
-                <p>
-                  Already have an account?{" "}
-                  <button onClick={() => setShowLogin(true)}>Login</button>
-                </p>
-              </div>
-            )}
-          </>
-        ) : (
-          <>
-            <ProjectList/>
-            <CreateProject/>
-            <button onClick={handleLogout}>Log Out</button>
+            <Route path="/projects" element={<ProjectList />} />
+            <Route path="/create-project" element={<CreateProject />} />
           </>
         )}
-      </div>
-      <ToastContainer></ToastContainer>
+      </Routes>
+      <Footer/>
+      <ToastContainer />
     </div>
   );
 };

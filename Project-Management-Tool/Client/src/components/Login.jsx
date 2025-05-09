@@ -7,7 +7,7 @@ const Login = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ username: "", password: "" });
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -30,10 +30,10 @@ const Login = ({ onLogin }) => {
         storeToken(response.data.token);
         console.log(response.data.token);
         toast.success("User Authenticated Successfully");
-        setTimeout(()=>{
-          setLoading(false);
-        }, 3000);
-        // navigate("/dashboard");
+        //setTimeout(() => {
+        //}, 3000);
+        setLoading(false);
+        navigate("/projects");
       }
     } catch (error) {
       console.log(error);
@@ -45,33 +45,43 @@ const Login = ({ onLogin }) => {
     }
   };
 
+  const goToRegister = () => {
+    navigate("/sign-up");
+  };
+
   return (
-    <form onSubmit={handleLogin}>
-      <h2>Login</h2>
-      <div>
-        <label>Username:</label>
-        <input
-          type="text"
-          name="username"
-          onChange={handleChange}
-          placeholder="Enter username"
-        />
-      </div>
+    <div>
+      <form onSubmit={handleLogin}>
+        <h2>Login</h2>
+        <div>
+          <label>Username:</label>
+          <input
+            type="text"
+            name="username"
+            onChange={handleChange}
+            placeholder="Enter username"
+          />
+        </div>
 
-      <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          name="password"
-          onChange={handleChange}
-          placeholder="Enter password"
-        />
-      </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            name="password"
+            onChange={handleChange}
+            placeholder="Enter password"
+          />
+        </div>
 
-      <button type="submit" disabled={loading}>
-        {loading ? "Logging in..." : "Login"}
-      </button>
-    </form>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </form>
+      <p>
+        if you do not have an account?{" "}
+        <button onClick={goToRegister}>Register</button>
+      </p>
+    </div>
   );
 };
 
