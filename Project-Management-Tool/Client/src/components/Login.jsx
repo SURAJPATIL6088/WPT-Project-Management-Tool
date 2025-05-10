@@ -30,10 +30,8 @@ const Login = ({ onLogin }) => {
         storeToken(response.data.token);
         console.log(response.data.token);
         toast.success("User Authenticated Successfully");
-        //setTimeout(() => {
-        //}, 3000);
         setLoading(false);
-        navigate("/projects");
+        navigate("/dashboard");
       }
     } catch (error) {
       console.log(error);

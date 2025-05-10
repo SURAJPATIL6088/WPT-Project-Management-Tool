@@ -25,6 +25,18 @@ const ContextProvider = ({ children }) => {
     }
   };
 
+  const fetchProjectById = async(id)=>{
+    try {
+      const response = await fetchProjectById(id);
+
+      if(response.status === 200){
+        
+      }
+    } catch (error) {
+      toast.error("Error fetching project:", error.message);
+    }
+  }
+
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {

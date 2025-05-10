@@ -3,9 +3,12 @@ import { deleteProject } from "../Services/ProjectService";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const ProjectList = () => {
   const { projects, fetchAllProjects } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAllProjects();
@@ -24,26 +27,32 @@ const ProjectList = () => {
     }
   };
 
+  console.log(projects.results);
   const handleUpdate = (id) => {
-    console.log({ projects });
-    try {
-    } catch (error) {}
+    navigate(`/update-project/${id}`);
   };
+
+  const handleProjectView = async(id)=>{
+    navigate(`/projects/${id}`);
+  }
 
   return (
     <div>
       <h2>Your Projects</h2>
       <ul>
-        {projects.map((project) => (
-          <li key={project.id}>
-            <h3>{project.name}</h3>
-            <p>{project.description}</p>
-            <p>{project.created_by}</p>
-            <p>{project.createdAt}</p>
-            <button onClick={() => handleDelete(project.id)}>Delete</button>
-            <button onClick={() => handleUpdate(project.id)}>Update</button>
-          </li>
-        ))}
+        {projects?.results?.length > 0 ? (
+          projects.results.map((project) => (
+            <li key={project.id}>
+              <h3>{project.name}</h3>
+              <p>{project.description}</p>
+              <button onClick={() => handleProjectView(project.id)}>View Details</button>
+              <button onClick={() => handleDelete(project.id)}>Delete</button>
+              <button onClick={() => handleUpdate(project.id)}>Update</button>
+            </li>
+          ))
+        ) : (
+          <p>No projects found.</p>
+        )}
       </ul>
     </div>
   );

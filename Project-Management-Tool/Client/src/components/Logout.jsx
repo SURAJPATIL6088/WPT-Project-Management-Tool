@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-const Logout = ({ onLogout }) => {
+const Logout = () => {
+  const { logout } = useContext(AuthContext);
+
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    onLogout(false);
+    logout();
   };
 
   return <button onClick={handleLogout}>Logout</button>;
