@@ -1,0 +1,57 @@
+/* Container spacing */
+.create-project-container {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: fit-content;
+  margin: 0 auto;
+
+  
+}
+
+/* Title styling */
+.create-project-container h2 {
+  margin-bottom: 25px;
+  font-weight: 600;
+  color: #333333;
+}
+
+/* Labels */
+.create-project-container .form-label {
+  font-weight: 500;
+}
+
+/* Text inputs */
+.create-project-container .form-control {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+}
+
+/* Button styles */
+.create-project-container .btn-primary {
+  background-color: #420838;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.create-project-container .btn-primary:hover {
+  background-color: #5e0b4f;
+}
+
+/* Error alert */
+.create-project-container .alert-danger {
+  border-radius: 8px;
+}
+
+/* Responsive layout tweaks */
+@media (max-width: 768px) {
+  .create-project-container {
+    padding: 20px;
+  }
+
+  .create-project-container .row {
+    flex-direction: column;
+  }
+}

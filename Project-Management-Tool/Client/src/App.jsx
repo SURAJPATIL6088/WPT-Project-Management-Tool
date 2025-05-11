@@ -26,7 +26,7 @@ const App = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div >
       <NavigationBar />
       <Routes>
         <Route path="/" element={<Home />} />

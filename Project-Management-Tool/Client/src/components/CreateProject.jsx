@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
-import { toast } from "react-toastify";
-import { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { Button, Form, Col, Row, Container, Alert, Spinner } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
+import "./CreateProject.css";
 
 const CreateProject = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { projects, fetchAllProjects } = useContext(AuthContext);
+  const { fetchAllProjects } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !description) {
-      setError("Both name and description are required.");
+    if (!name || !description || !status || !deadline) {
+      setError("All fields are required.");
       return;
     }
 
@@ -29,8 +32,6 @@ const CreateProject = () => {
 
       const decoded = jwtDecode(token);
       const userId = decoded.userId;
-      //console.log(token);
-      //console.log(decoded.userId);
 
       const response = await fetch("http://localhost:5000/api/projects", {
         method: "POST",
@@ -41,73 +42,103 @@ const CreateProject = () => {
         body: JSON.stringify({
           name,
           description,
+          deadline,
+          status,
           created_by: userId,
         }),
       });
+
       if (!response.ok) throw new Error("Failed to create project");
 
       const data = await response.json();
-      console.log("Project created:", data);
       toast.success("Project created successfully");
       fetchAllProjects();
       setName("");
       setDescription("");
+      setDeadline("");
+      setStatus("");
     } catch (error) {
       setError(error.message);
-      console.error("Error creating project:", error);
-      toast.error("Error creating project:", error);
+      toast.error("Error creating project");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchAllProjects();
-  }, []);
-
   return (
-    <div>
+    <Container className="mt-4 create-project-container">
       <h2>Create New Project</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Project Name</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter project name"
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Project Description</label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter project description"
-          />
-        </div>
-        <div>
-          <label htmlFor="deadline">Project Deadline</label>
-          <input type="date" />
-        </div>
-        <div>
-          <label htmlFor="status">Project Status</label>
-          <select>
-            <option>Testing</option>
-            <option>Developement</option>
-            <option>Pending</option>
-            <option>Completed</option>
-          </select>
-        </div>
+      {error && <Alert variant="danger">{error}</Alert>}
+      <Form onSubmit={handleSubmit}>
+        
+          <Col md={6}>
+            <Form.Group controlId="name">
+              <Form.Label>Project Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter project name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? "Creating..." : "Create Project"}
-        </button>
-      </form>
-    </div>
+          <Col md={6}>
+            <Form.Group controlId="description">
+              <Form.Label>Project Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter project description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+        
+
+        
+          <Col md={6}>
+            <Form.Group controlId="deadline">
+              <Form.Label>Project Deadline</Form.Label>
+              <Form.Control
+                type="date"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+
+          <Col md={6}>
+            <Form.Group controlId="status">
+              <Form.Label>Project Status</Form.Label>
+              <Form.Control
+                as="select"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option value="">Select Status</option>
+                <option value="Testing">Testing</option>
+                <option value="Development">Development</option>
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
+        
+
+        <div className=" justify-content-end">
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={loading}
+            className="px-4"
+          >
+            {loading ? <Spinner animation="border" size="sm" /> : "Create Project"}
+          </Button>
+        </div>
+      </Form>
+    </Container>
   );
 };
 
