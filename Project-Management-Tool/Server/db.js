@@ -4,7 +4,7 @@ const connection = createConnection({
   host: "localhost",
   user: "root",
   password: "cdac",
-  database: "management"
+  database: "Project"
 });
 
 connection.connect((err) => {

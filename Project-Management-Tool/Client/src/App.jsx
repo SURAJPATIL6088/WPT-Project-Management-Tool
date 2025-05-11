@@ -16,6 +16,8 @@ import UpdateProject from "./components/UpdateProject";
 import Dashboard from "./components/Pages/Dashboard";
 import ViewProject from "./components/Pages/ViewProject";
 
+
+
 const App = () => {
   const { loggedIn, login, logout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -33,8 +35,8 @@ const App = () => {
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/contact-us" element={<Contact />} />
-        <Route
-          path="/sign-in"
+      <Route path="/viewproject" element={<ViewProject />} />
+        <Route path="/sign-in"
           element={<Login onLoginSuccess={handleLogin} />}
         />
         <Route
@@ -50,7 +52,7 @@ const App = () => {
               path="/update-project/:projectId"
               element={<UpdateProject />}
             />
-            <Route path="/projects/:projectId" element={<ViewProject/>}/>
+            {/* <Route path="/projects/:projectId" element={<ViewProject/>}/> */}
           </>
         )}
       </Routes>

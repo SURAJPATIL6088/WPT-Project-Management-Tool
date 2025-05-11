@@ -1,48 +1,63 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { getProjectById, updateProject } from "../Services/ProjectService";
 import { getToken } from "../Services/AdminService";
+import "./UpdateProject.css";
 
 const UpdateProject = () => {
   const { projectId } = useParams();
-  const [projectData, setProjectData] = useState({ name: "", description: "" });
+  const navigate = useNavigate();
+  const { fetchAllProjects } = useContext(AuthContext);
+
+  const [projectData, setProjectData] = useState({
+    name: "",
+    description: "",
+    assignedTo: "",
+    deadline: "",
+    status: "Development",
+  });
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { fetchAllProjects } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setProjectData({ ...projectData, [e.target.name]: e.target.value });
-  };
-
-  const fetchProject = async () => {
-    try {
-      const response = await getProjectById(projectId);
-      if (response.status === 200) {
-        setProjectData(response.data);
-      } else {
-        toast.error("Failed to fetch project data");
-      }
-    } catch (error) {
-      toast.error("Error fetching project data");
-    }
-  };
 
   useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const response = await getProjectById(projectId);
+        if (response.status === 200) {
+          setProjectData(response.data);
+        } else {
+          toast.error("Failed to fetch project data");
+        }
+      } catch (error) {
+        toast.error("Error fetching project data");
+      }
+    };
+
     fetchProject();
-  }, []);
+  }, [projectId]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "assignedTo") {
+      const regex = /^[A-Za-z]*$/;
+      if (!regex.test(value)) return;
+    }
+
+    setProjectData({ ...projectData, [name]: value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const { name, description } = projectData;
+
     if (!name || !description) {
-      toast.error("Both name and description are required..");
-      setError("Both name and description are required..");
+      setError("Both name and description are required.");
+      toast.error("Please fill all required fields.");
       return;
     }
 
@@ -54,55 +69,87 @@ const UpdateProject = () => {
       const decoded = jwtDecode(token);
       const userId = decoded.userId;
 
-      console.log(projectData);
       const response = await updateProject(projectId, projectData);
-
       if (response.status === 200) {
         fetchAllProjects();
-        setProjectData(response.data);
-        toast.success("Project Updated Successfully");
+        toast.success("Project updated successfully!");
         navigate("/projects");
       }
-    } catch (error) {
-      console.log(error.message);
-      toast.error("Error in Project Update..");
-      setError(error.message);
+    } catch (err) {
+      toast.error("Failed to update project.");
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Update Project</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="id">Project Id : {projectId}</label>
-        </div>
-        <div>
-          <label htmlFor="name">Project Name</label>
+    <div className="container">
+      <div className="form-container">
+        <h2>Update Project</h2>
+        <p>Project Id : {projectId}</p>
+
+        <form onSubmit={handleSubmit}>
+          <label>Project Name</label>
           <input
             type="text"
-            id="name"
             name="name"
             value={projectData.name}
             onChange={handleChange}
             placeholder="Enter project name"
           />
-        </div>
-        <div>
-          <label htmlFor="description">Project Description</label>
+
+          <label>Project Description</label>
           <textarea
-            id="description"
             name="description"
             value={projectData.description}
             onChange={handleChange}
             placeholder="Enter project description"
           />
-        </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? "Updating..." : "Update Project"}
-        </button>
-      </form>
+
+          <label>Assigned To</label>
+          <input
+            type="text"
+            name="assignedTo"
+            value={projectData.assignedTo}
+            onChange={handleChange}
+            placeholder="Enter user ID"
+            pattern="[A-Za-z]+"
+            title="Only letters allowed"
+            required
+          />
+
+          <label>Deadline</label>
+          <input
+            type="date"
+            name="deadline"
+            value={projectData.deadline}
+            onChange={handleChange}
+          />
+
+          <label>Project Status</label>
+          <select
+            name="status"
+            value={projectData.status}
+            onChange={handleChange}
+          >
+            <option value="Development">Development</option>
+            <option value="Testing">Testing</option>
+            <option value="Completed">Completed</option>
+          </select>
+
+          {error && <p className="error">{error}</p>}
+
+          <div className="btn-box">
+            <button type="submit" disabled={loading}>
+              {loading ? "Updating..." : "Update Project"}
+            </button>
+            <button className="get-users-btn" type="button">Get Users</button>
+          </div>
+        </form>
+      </div>
+
+      <footer>Footer</footer>
     </div>
   );
 };

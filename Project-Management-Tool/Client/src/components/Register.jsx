@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineUserAdd } from "react-icons/ai"; // Import icon
+import './Register.css'; // Import external CSS
 
 const Register = ({ onRegisterSuccess }) => {
   const [username, setUsername] = useState("");
@@ -48,36 +50,54 @@ const Register = ({ onRegisterSuccess }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleRegister}>
-        <h2>Register</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {success && <p style={{ color: "green" }}>{success}</p>}
-        <div>
-          <label>Username:</label>
+    <div className="register-wrapper">
+      <form onSubmit={handleRegister} className="register-form">
+        <h2 className="register-title">Register</h2>
+
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
+
+        <div className="input-group">
+          <label>Username</label>
           <input
             type="text"
             value={username}
             required
             minLength={3}
             onChange={(e) => setUsername(e.target.value)}
+            className="input-field"
           />
         </div>
-        <div>
-          <label>Password:</label>
+
+        <div className="input-group">
+          <label>Password</label>
           <input
             type="password"
             value={password}
             required
             minLength={6}
             onChange={(e) => setPassword(e.target.value)}
+            className="input-field"
           />
         </div>
-        <button type="submit">Register</button>
+         <div class ="btn">
+         <button type="submit" className="submit-button">
+          <AiOutlineUserAdd /> Register
+        </button>
+         </div>
+       
+
+        <p className="login-link">
+          Already have an account?{" "}
+          <button
+            type="button"
+            onClick={goToLogin}
+            className="login-button"
+          >
+            Login
+          </button>
+        </p>
       </form>
-      <p>
-        Already have an account? <button onClick={goToLogin}>Login</button>
-      </p>
     </div>
   );
 };

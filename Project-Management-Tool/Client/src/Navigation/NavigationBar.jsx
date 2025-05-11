@@ -20,7 +20,7 @@ const NavigationBar = () => {
           <Link to="/">Home</Link> <Link to="/about-us">About Us</Link>{" "}
           <Link to="/feedback">Feedback</Link>{" "}
           <Link to="/contact-us">Contact</Link>{" "}
-          <Link to="/sign-up">Register</Link>{" "}
+          <Link to="/sign-in">Login</Link>{" "}
         </>
       )}
     </nav>
