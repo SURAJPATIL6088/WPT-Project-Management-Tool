@@ -33,13 +33,8 @@ export function getProjectById(id) {
   });
 }
 
-/*
-name
-des
-assign
-project lead
-create date
-deadline
-type(sector)
-status(complete, end, )
-*/
+export function getAssignedProjects() {
+  return axios.get(`http://localhost:5000/api/projects/user/assigned`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}

@@ -1,15 +1,18 @@
 import express from "express";
-import { deleteProject, getProjects, updateProjectById, createProject, getProjectById } from "../controllers/projectController.js";
+import { deleteProject, getProjects, updateProject, createProject, getProjectById, assignedProjects } from "../controllers/projectController.js";
+import {verifyToken} from '../middleware/verifyToken.js';
 const router = express.Router();
 
-router.get("/", getProjects);
+router.get("/", verifyToken, getProjects);
 
-router.post("/", createProject);
+router.post("/", verifyToken, createProject);
 
-router.put("/:id", updateProjectById);
+router.put("/:id", updateProject);
 
-router.delete("/:id", deleteProject);
+router.delete("/:id", verifyToken, deleteProject);
 
-router.get("/:id", getProjectById);
+router.get("/:id", verifyToken, getProjectById);
+
+router.get('/user/assigned', verifyToken, assignedProjects);
 
 export default router;

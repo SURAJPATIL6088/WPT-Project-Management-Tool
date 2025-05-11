@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Register = ({ onRegisterSuccess }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -23,17 +24,18 @@ const Register = ({ onRegisterSuccess }) => {
       const response = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, role }),
       });
 
       const data = await response.json();
-
+      console.log(response);
       if (!response.ok) {
         setError(data.error || "Registration failed");
       } else {
         setSuccess("User registered successfully. Redirecting to login...");
         setUsername("");
         setPassword("");
+        setRole("");
         setTimeout(() => {
           onRegisterSuccess();
         }, 1500);
@@ -50,9 +52,10 @@ const Register = ({ onRegisterSuccess }) => {
   return (
     <div>
       <form onSubmit={handleRegister}>
-        <h2>Register</h2>
+        <h2>Register as Employee</h2>
         {error && <p style={{ color: "red" }}>{error}</p>}
         {success && <p style={{ color: "green" }}>{success}</p>}
+
         <div>
           <label>Username:</label>
           <input
@@ -73,6 +76,13 @@ const Register = ({ onRegisterSuccess }) => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        {/* <select value={role} onChange={(e) => setRole(e.target.value)} required>
+          <option value="" disabled>
+            Select role
+          </option>
+          <option value="user">User</option>
+        </select> */}
+
         <button type="submit">Register</button>
       </form>
       <p>

@@ -3,6 +3,7 @@ import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { body, validationResult } from "express-validator";
 import { getConnection } from "../db.js";
+import { StatusCodes } from "http-status-codes";
 
 const connection = getConnection();
 const secretKey = "team66";
@@ -12,7 +13,7 @@ export const registerAdmin = async (req, res) => {
   if (!errors.isEmpty())
     return res.status(400).json({ errors: "Validation Error" });
 
-  const { username, password } = req.body;
+  const { username, password, role } = req.body;
   const qry = `SELECT * FROM users WHERE username = '${username}'`;
   connection.query(qry, async (err, results) => {
     if (err) return res.status(500).json({ error: "Database error" });
@@ -23,11 +24,11 @@ export const registerAdmin = async (req, res) => {
     const hashedPassword = await hash(password, 10);
 
     connection.query(
-      "INSERT INTO users (username, password) VALUES (?, ?)",
-      [username, hashedPassword],
+      "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+      [username, hashedPassword, role],
       (err) => {
         if (err) return res.status(500).json({ error: "Database error" });
-        res.json({ message: "User registered successfully" });
+        res.json({ message: "User registered successfully" , role:role});
       }
     );
   });
@@ -45,9 +46,14 @@ export const loginAdmin = async (req, res) => {
     if (!validPassword)
       return res.status(400).json({ error: "Invalid credentials" });
 
-    const token = jwt.sign({ userId: results[0].id }, secretKey, {
-      expiresIn: "1h",
-    });
-    res.json({ token });
+    const token = jwt.sign(
+      { userId: results[0].id, role: results[0].role },
+      secretKey,
+      {
+        expiresIn: "1h",
+      }
+    );
+    res.json({ token, role: results[0].role });
   });
 };
+

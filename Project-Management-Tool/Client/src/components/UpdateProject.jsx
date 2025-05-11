@@ -5,15 +5,23 @@ import { jwtDecode } from "jwt-decode";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { getProjectById, updateProject } from "../Services/ProjectService";
-import { getToken } from "../Services/AdminService";
+import { getRole, getToken } from "../Services/AdminService";
+import RegisteredUsers from "./Pages/RegisteredUsers";
 
 const UpdateProject = () => {
   const { projectId } = useParams();
-  const [projectData, setProjectData] = useState({ name: "", description: "" });
+  const [projectData, setProjectData] = useState({
+    name: "",
+    description: "",
+    assigned_to: "",
+    deadline: "",
+    status: "",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { fetchAllProjects } = useContext(AuthContext);
   const navigate = useNavigate();
+  const role = getRole();
 
   const handleChange = (e) => {
     setProjectData({ ...projectData, [e.target.name]: e.target.value });
@@ -39,10 +47,10 @@ const UpdateProject = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { name, description } = projectData;
-    if (!name || !description) {
-      toast.error("Both name and description are required..");
-      setError("Both name and description are required..");
+    const { name, description, assigned_to, deadline, status } = projectData;
+    if (!name || !description || !assigned_to || !deadline || !status) {
+      toast.error("All fields are required");
+      setError("All fields are required");
       return;
     }
 
@@ -98,11 +106,77 @@ const UpdateProject = () => {
             placeholder="Enter project description"
           />
         </div>
+        {role === "admin" && (
+          <div>
+            <div>
+              <label htmlFor="assigned_to">Assigned To</label>
+              <input
+                type="text"
+                id="assigned_to"
+                name="assigned_to"
+                value={projectData.assigned_to}
+                onChange={handleChange}
+                placeholder="Enter the person assigned to the project"
+              />
+            </div>
+            <div>
+              <label htmlFor="deadline">Deadline</label>
+              <input
+                type="date"
+                id="deadline"
+                name="deadline"
+                value={projectData.deadline}
+                onChange={handleChange}
+                placeholder="Enter project deadline"
+              />
+            </div>
+          </div>
+        )}{" "}
+        {role === "user" && (
+          <div>
+            <label htmlFor="deadline">Updated On</label>
+            <input
+              type="date"
+              id="deadline"
+              name="deadline"
+              value={projectData.deadline}
+              onChange={(e) => {
+                const selectedDate = new Date(e.target.value);
+                const originalDeadline = new Date(projectData.deadline);
+
+                if (selectedDate > originalDeadline) {
+                  alert("Selected date cannot be after the original deadline.");
+                  return;
+                }
+
+                handleChange(e);
+              }}
+              placeholder="Enter project deadline"
+            />
+          </div>
+        )}
+        <div>
+          <label htmlFor="status">Project Status</label>
+          <select
+            id="status"
+            name="status"
+            value={projectData.status}
+            onChange={handleChange}
+          >
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Development">Development</option>
+            <option value="Testing">Testing</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <button type="submit" disabled={loading}>
           {loading ? "Updating..." : "Update Project"}
         </button>
       </form>
+
+      <div>{role === "admin" && <RegisteredUsers />}</div>
     </div>
   );
 };

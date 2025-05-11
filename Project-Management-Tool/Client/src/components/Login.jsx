@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { loginAdmin, storeToken } from "../Services/AdminService.js";
+import { loginAdmin, storeRole, storeToken } from "../Services/AdminService.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [formData, setFormData] = useState({ username: "", password: "", role: "" });
 
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -28,6 +28,7 @@ const Login = ({ onLogin }) => {
 
       if (response.status === 200) {
         storeToken(response.data.token);
+        storeRole(response.data.role);
         console.log(response.data.token);
         toast.success("User Authenticated Successfully");
         setLoading(false);

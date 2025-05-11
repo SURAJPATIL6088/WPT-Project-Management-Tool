@@ -4,11 +4,14 @@ import { toast } from "react-toastify";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import RegisteredUsers from "./Pages/RegisteredUsers";
+import { getRole } from "../Services/AdminService";
 
 const ProjectList = () => {
   const { projects, fetchAllProjects } = useContext(AuthContext);
 
   const navigate = useNavigate();
+  const role = getRole();
 
   useEffect(() => {
     fetchAllProjects();
@@ -27,14 +30,14 @@ const ProjectList = () => {
     }
   };
 
-  console.log(projects.results);
+  // console.log(projects.results);
   const handleUpdate = (id) => {
     navigate(`/update-project/${id}`);
   };
 
-  const handleProjectView = async(id)=>{
+  const handleProjectView = async (id) => {
     navigate(`/projects/${id}`);
-  }
+  };
 
   return (
     <div>
@@ -45,7 +48,9 @@ const ProjectList = () => {
             <li key={project.id}>
               <h3>{project.name}</h3>
               <p>{project.description}</p>
-              <button onClick={() => handleProjectView(project.id)}>View Details</button>
+              <button onClick={() => handleProjectView(project.id)}>
+                View Details
+              </button>
               <button onClick={() => handleDelete(project.id)}>Delete</button>
               <button onClick={() => handleUpdate(project.id)}>Update</button>
             </li>
@@ -54,6 +59,7 @@ const ProjectList = () => {
           <p>No projects found.</p>
         )}
       </ul>
+      <div>{role === "admin" && <RegisteredUsers />}</div>
     </div>
   );
 };

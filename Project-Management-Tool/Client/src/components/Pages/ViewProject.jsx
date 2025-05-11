@@ -32,10 +32,13 @@ const ViewProject = () => {
     <div>
       <div>
         <h2>Project Details of {projectId}</h2>
-        <h3>{projectData.name}</h3>
-        <p>{projectData.description}</p>
-        <p>{projectData.created_by}</p>
-        <p>{projectData.createdAt}</p>
+        <h3>Name : {projectData.name}</h3>
+        <p>Description : {projectData.description}</p>
+        <p>Project Manager Id : {projectData.created_by}</p>
+        <p>Project assigned Employee Id : {projectData.assigned_to}</p>
+        <p>Start Date : {projectData.created_at?.split('T')[0]}</p>
+        <p>End Date : {projectData.deadline?.split("T")[0]}</p>
+        <p>Project Status : {projectData.status}</p>
       </div>
     </div>
   );

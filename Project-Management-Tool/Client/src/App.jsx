@@ -15,10 +15,13 @@ import Footer from "./components/Footer";
 import UpdateProject from "./components/UpdateProject";
 import Dashboard from "./components/Pages/Dashboard";
 import ViewProject from "./components/Pages/ViewProject";
+import AssignedProjects from "./components/Pages/AssignedProjects";
+import { getRole } from "./Services/AdminService";
 
 const App = () => {
   const { loggedIn, login, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const role = getRole();
 
   const handleLogin = () => {
     login();
@@ -41,7 +44,7 @@ const App = () => {
           path="/sign-up"
           element={<Register onRegisterSuccess={() => navigate("/sign-in")} />}
         />
-        {loggedIn && (
+        {loggedIn && role === "admin" ? (
           <>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/projects" element={<ProjectList />} />
@@ -50,9 +53,19 @@ const App = () => {
               path="/update-project/:projectId"
               element={<UpdateProject />}
             />
-            <Route path="/projects/:projectId" element={<ViewProject/>}/>
+            <Route path="/projects/:projectId" element={<ViewProject />} />
           </>
-        )}
+        ) : role === 'user' ?(
+          <>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/projects" element={<AssignedProjects />} />
+            <Route
+              path="/update-project/:projectId"
+              element={<UpdateProject />}
+            />
+            <Route path="/projects/:projectId" element={<ViewProject />} />
+          </>
+        ):null}
       </Routes>
       <Footer />
       <ToastContainer />

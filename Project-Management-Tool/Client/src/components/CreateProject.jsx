@@ -3,10 +3,13 @@ import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { getToken } from "../Services/AdminService";
 
 const CreateProject = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [status, setStatus] = useState("Pending");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -15,8 +18,8 @@ const CreateProject = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !description) {
-      setError("Both name and description are required.");
+    if (!name || !description || !deadline) {
+      setError("All fields are required.");
       return;
     }
 
@@ -24,7 +27,7 @@ const CreateProject = () => {
     setError("");
 
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken("token");
       if (!token) throw new Error("No token found");
 
       const decoded = jwtDecode(token);
@@ -41,6 +44,8 @@ const CreateProject = () => {
         body: JSON.stringify({
           name,
           description,
+          deadline,
+          status,
           created_by: userId,
         }),
       });
@@ -52,6 +57,8 @@ const CreateProject = () => {
       fetchAllProjects();
       setName("");
       setDescription("");
+      setDeadline("");
+      setStatus("");
     } catch (error) {
       setError(error.message);
       console.error("Error creating project:", error);
@@ -89,16 +96,28 @@ const CreateProject = () => {
           />
         </div>
         <div>
-          <label htmlFor="deadline">Project Deadline</label>
-          <input type="date" />
+          <label htmlFor="deadline">Deadline</label>
+          <input
+            type="date"
+            id="deadline"
+            name="deadline"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
+            placeholder="Enter project deadline"
+          />
         </div>
+
         <div>
           <label htmlFor="status">Project Status</label>
-          <select>
-            <option>Testing</option>
-            <option>Developement</option>
-            <option>Pending</option>
-            <option>Completed</option>
+          <select
+            id="status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            <option value="Testing">Testing</option>
+            <option value="Development">Development</option>
+            <option value="Pending">Pending</option>
+            <option value="Completed">Completed</option>
           </select>
         </div>
 

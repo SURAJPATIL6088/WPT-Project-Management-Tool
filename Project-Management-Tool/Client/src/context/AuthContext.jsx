@@ -1,7 +1,7 @@
 import React, { useState, createContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { fetchProjects } from "../Services/ProjectService.js";
-import { getToken, removeToken } from "../Services/AdminService.js";
+import { getToken, removeRole, removeToken } from "../Services/AdminService.js";
 import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext("");
@@ -50,6 +50,7 @@ const ContextProvider = ({ children }) => {
 
   const logout = () => {
     removeToken("token");
+    removeRole("role");
     navigate("/sign-up");
     setLoggedIn(false);
   };
