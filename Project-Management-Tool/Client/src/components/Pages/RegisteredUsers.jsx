@@ -20,8 +20,6 @@ const RegisteredUsers = () => {
     }
   };
 
-  console.log(getUsers);
-
   const handleClose = () => {
     setShowTable(false);
   };

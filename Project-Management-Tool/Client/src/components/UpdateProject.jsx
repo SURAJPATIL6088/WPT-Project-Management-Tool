@@ -7,6 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 import { getProjectById, updateProject } from "../Services/ProjectService";
 import { getRole, getToken } from "../Services/AdminService";
 import RegisteredUsers from "./Pages/RegisteredUsers";
+import "./UpdateProject.css";
 
 const UpdateProject = () => {
   const { projectId } = useParams();
@@ -79,103 +80,116 @@ const UpdateProject = () => {
   };
 
   return (
-    <div>
-      <h2>Update Project</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="id">Project Id : {projectId}</label>
-        </div>
-        <div>
-          <label htmlFor="name">Project Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={projectData.name}
-            onChange={handleChange}
-            placeholder="Enter project name"
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Project Description</label>
-          <textarea
-            id="description"
-            name="description"
-            value={projectData.description}
-            onChange={handleChange}
-            placeholder="Enter project description"
-          />
-        </div>
-        {role === "admin" && (
+    <div className="container">
+      <div className="form-container">
+        <h2>Update Project</h2>
+        <form onSubmit={handleSubmit}>
           <div>
+            <label htmlFor="id">Project Id : {projectId}</label>
+          </div>
+          <div>
+            <label htmlFor="name">Project Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={projectData.name}
+              onChange={handleChange}
+              placeholder="Enter project name"
+            />
+          </div>
+          <div>
+            <label htmlFor="description">Project Description</label>
+            <textarea
+              id="description"
+              name="description"
+              value={projectData.description}
+              onChange={handleChange}
+              placeholder="Enter project description"
+            />
+          </div>
+          {role === "admin" && (
             <div>
-              <label htmlFor="assigned_to">Assigned To</label>
-              <input
-                type="text"
-                id="assigned_to"
-                name="assigned_to"
-                value={projectData.assigned_to}
-                onChange={handleChange}
-                placeholder="Enter the person assigned to the project"
-              />
+              <div>
+                <label htmlFor="assigned_to">Assigned To</label>
+                <input
+                  type="text"
+                  id="assigned_to"
+                  name="assigned_to"
+                  value={projectData.assigned_to}
+                  onChange={handleChange}
+                  placeholder="Enter the person assigned to the project"
+                />
+              </div>
+              <div>
+                <label htmlFor="deadline">Deadline</label>
+                <input
+                  type="date"
+                  id="deadline"
+                  name="deadline"
+                  value={projectData.deadline}
+                  onChange={handleChange}
+                  placeholder="Enter project deadline"
+                />
+              </div>
             </div>
+          )}{" "}
+          {role === "user" && (
             <div>
-              <label htmlFor="deadline">Deadline</label>
+              <label htmlFor="deadline">Updated On</label>
               <input
                 type="date"
                 id="deadline"
                 name="deadline"
                 value={projectData.deadline}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const selectedDate = new Date(e.target.value);
+                  const originalDeadline = new Date(projectData.deadline);
+
+                  if (selectedDate > originalDeadline) {
+                    alert(
+                      "Selected date cannot be after the original deadline."
+                    );
+                    return;
+                  }
+
+                  handleChange(e);
+                }}
                 placeholder="Enter project deadline"
               />
             </div>
-          </div>
-        )}{" "}
-        {role === "user" && (
+          )}
           <div>
-            <label htmlFor="deadline">Updated On</label>
-            <input
-              type="date"
-              id="deadline"
-              name="deadline"
-              value={projectData.deadline}
-              onChange={(e) => {
-                const selectedDate = new Date(e.target.value);
-                const originalDeadline = new Date(projectData.deadline);
-
-                if (selectedDate > originalDeadline) {
-                  alert("Selected date cannot be after the original deadline.");
-                  return;
-                }
-
-                handleChange(e);
-              }}
-              placeholder="Enter project deadline"
-            />
+            <label htmlFor="status">Project Status</label>
+            <select
+              id="status"
+              name="status"
+              value={projectData.status}
+              onChange={handleChange}
+            >
+              <option className="radio-txt" value="Pending">
+                Pending
+              </option>
+              <option className="radio-txt" value="In Progress">
+                In Progress
+              </option>
+              <option className="radio-txt" value="Development">
+                Development
+              </option>
+              <option className="radio-txt" value="Testing">
+                Testing
+              </option>
+              <option className="radio-txt" value="Completed">
+                Completed
+              </option>
+            </select>
           </div>
-        )}
-        <div>
-          <label htmlFor="status">Project Status</label>
-          <select
-            id="status"
-            name="status"
-            value={projectData.status}
-            onChange={handleChange}
-          >
-            <option value="Pending">Pending</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Development">Development</option>
-            <option value="Testing">Testing</option>
-            <option value="Completed">Completed</option>
-          </select>
-        </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? "Updating..." : "Update Project"}
-        </button>
-      </form>
-
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <button type="submit" disabled={loading}>
+            {loading ? "Updating..." : "Update Project"}
+          </button>
+        </form>
+      </div>
       <div>{role === "admin" && <RegisteredUsers />}</div>
     </div>
   );

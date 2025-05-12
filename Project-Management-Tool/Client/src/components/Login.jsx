@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import { loginAdmin, storeRole, storeToken } from "../Services/AdminService.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "./Login.css";
+import { FaSignInAlt } from "react-icons/fa";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({ username: "", password: "", role: "" });
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    role: "",
+  });
 
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -27,12 +33,12 @@ const Login = () => {
       console.log("response : ", response);
 
       if (response.status === 200) {
+        navigate("/dashboard");
         storeToken(response.data.token);
         storeRole(response.data.role);
         console.log(response.data.token);
         toast.success("User Authenticated Successfully");
         setLoading(false);
-        navigate("/dashboard");
       }
     } catch (error) {
       console.log(error);
@@ -49,37 +55,42 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleLogin}>
-        <h2>Login</h2>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            name="username"
-            onChange={handleChange}
-            placeholder="Enter username"
-          />
-        </div>
+    <div className="wrapper">
+      <form className="form" onSubmit={handleLogin}>
+        <h2 className="title">Login</h2>
 
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            onChange={handleChange}
-            placeholder="Enter password"
-          />
-        </div>
+        <input
+          className="input"
+          type="text"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          placeholder="Username"
+          required
+        />
 
-        <button type="submit" disabled={loading}>
+        <input
+          className="input"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Password"
+          required
+        />
+
+        <button className="button-cls" type="submit" disabled={loading}>
+          <FaSignInAlt style={{ marginRight: "8px" }} />
           {loading ? "Logging in..." : "Login"}
         </button>
+
+        <p className="text">
+          Don't have an account?{" "}
+          <span className="link" onClick={goToRegister}>
+            Register
+          </span>
+        </p>
       </form>
-      <p>
-        if you do not have an account?{" "}
-        <button onClick={goToRegister}>Register</button>
-      </p>
     </div>
   );
 };

@@ -1,0 +1,130 @@
+/* General styling for Team Wrapper */
+.team-wrapper {
+  background-color: #181622;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: linear-gradient(90deg, rgba(0,70,209,0.03) 0%, rgba(57,14,61,0.1) 100%);
+  /* clip-path: polygon(0 0, 100% 0, 100% 100%,50% 95%, 0 100%); */
+}
+
+/* Title Styling */
+.team-title {
+  font-size: 52px;
+  font-weight: 800;
+  text-align: center;
+  color: #dfd8d8;
+}
+
+.team-description {
+  font-size: 20px;
+  line-height: 1.5;
+  font-weight: 600;
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+  color: hsl(246, 6%, 65%);
+  margin-bottom: 80px;
+}
+
+/* Styling for the container of team members */
+.team-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 20px;
+  max-width: 1200px;
+}
+
+.team-member-container {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  background-color: hsl(250, 24%, 9%);
+  box-shadow: rgb(252, 3, 111, 0.15) 0px 4px 24px;
+  border: 1px solid rgb(252, 3, 111, 30%);
+  padding: 24px;
+  border-radius: 12px;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.team-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.team-member-data {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  gap: 4px;
+}
+
+.team-member-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #282d45;
+  object-fit: cover;
+}
+
+.team-member-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.team-member-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #bbb;
+}
+
+.team-member-bio {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #bbb;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  .team-title {
+    font-size: 36px;
+    margin-top: 12px;
+  }
+
+  .team-description {
+    font-size: 16px;
+    margin-bottom: 60px;
+  }
+
+  .team-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .team-member-container {
+    width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .team-title {
+    font-size: 28px;
+  }
+
+  .team-description {
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+
+  .team-member-container {
+    width: 250px;
+  }
+}

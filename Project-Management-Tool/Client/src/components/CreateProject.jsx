@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { getToken } from "../Services/AdminService";
+import "./CreateProject.css";
 
 const CreateProject = () => {
   const [name, setName] = useState("");
@@ -73,9 +74,9 @@ const CreateProject = () => {
   }, []);
 
   return (
-    <div>
+    <div className="modal-wrapper">
+      <form className="modal-form" onSubmit={handleSubmit}>
       <h2>Create New Project</h2>
-      <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Project Name</label>
           <input
@@ -114,10 +115,10 @@ const CreateProject = () => {
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
-            <option value="Testing">Testing</option>
-            <option value="Development">Development</option>
-            <option value="Pending">Pending</option>
-            <option value="Completed">Completed</option>
+            <option className="radio-txt" value="Testing">Testing</option>
+            <option className="radio-txt" value="Development">Development</option>
+            <option className="radio-txt" value="Pending">Pending</option>
+            <option className="radio-txt" value="Completed">Completed</option>
           </select>
         </div>
 

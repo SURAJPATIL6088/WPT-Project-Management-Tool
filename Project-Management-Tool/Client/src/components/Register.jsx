@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineUserAdd } from "react-icons/ai";
+import "./Register.css";
 
 const Register = ({ onRegisterSuccess }) => {
   const [username, setUsername] = useState("");
@@ -50,44 +52,46 @@ const Register = ({ onRegisterSuccess }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleRegister}>
-        <h2>Register as Employee</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {success && <p style={{ color: "green" }}>{success}</p>}
+    <div className="register-wrapper">
+      <form onSubmit={handleRegister} className="register-form">
+        <h2 className="register-title">Register</h2>
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
 
-        <div>
+        <div className="input-group">
           <label>Username:</label>
           <input
             type="text"
             value={username}
             required
+            className="input-field"
             minLength={3}
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-        <div>
+        <div className="input-group">
           <label>Password:</label>
           <input
             type="password"
             value={password}
             required
             minLength={6}
+            className="input-field"
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        {/* <select value={role} onChange={(e) => setRole(e.target.value)} required>
-          <option value="" disabled>
-            Select role
-          </option>
-          <option value="user">User</option>
-        </select> */}
 
-        <button type="submit">Register</button>
+        <button type="submit" className="submit-button">
+          <AiOutlineUserAdd /> Register
+        </button>
+
+        <p className="login-link">
+          Already have an account?{" "}
+          <span className="link" onClick={goToLogin}>
+            Login
+          </span>
+        </p>
       </form>
-      <p>
-        Already have an account? <button onClick={goToLogin}>Login</button>
-      </p>
     </div>
   );
 };

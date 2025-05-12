@@ -11,10 +11,11 @@ const ViewProject = () => {
   const [projectData, setProjectData] = useState({ name: "", description: "" });
   const token = getToken();
 
-  const fetchProject = async () => {
+  const fetchProject = async (projectId) => {
     try {
       const response = await getProjectById(projectId);
       if (response.status === 200) {
+        console.log(response);
         setProjectData(response.data);
       } else {
         toast.error("Failed to fetch project data");
@@ -25,8 +26,10 @@ const ViewProject = () => {
   };
 
   useEffect(() => {
-    fetchProject();
+    fetchProject(projectId);
   }, []);
+
+  console.log(projectData);
 
   return (
     <div>
