@@ -80,6 +80,7 @@ const UpdateProject = () => {
   };
 
   return (
+    <div className="main-container">
     <div className="container">
       <div className="form-container">
         <h2>Update Project</h2>
@@ -191,6 +192,7 @@ const UpdateProject = () => {
         </form>
       </div>
       <div>{role === "admin" && <RegisteredUsers />}</div>
+    </div>
     </div>
   );
 };
